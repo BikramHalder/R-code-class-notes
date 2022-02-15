@@ -1,7 +1,7 @@
 #############
 "R-code notes compilation for  Week 1 January 20th, 20th
 Compiled by: Bikram Halder, B.Math(hons.) 1st year"
-#############
+############# @BikramHalder
 
 # R categorical data
 # Factors and Levels
@@ -191,60 +191,115 @@ cl12
 l12
 ###
 
+
+
+
 ###
+# The https://www.isibang.ac.in/~athreya/Teaching/ISCD/Master.csv file contains Deceased data from KA-COVID-19 bulletins
 decdf <- read.csv(
-    file = "https://www.isibang.ac.in/~athreya/Teaching/ISCD/Master.csv", header = TRUE
+    file = "https://www.isibang.ac.in/~athreya/Teaching/ISCD/Master.csv",
+    header = TRUE
+)
+# Use months() to extract months of reporting date
+decdf$Month <- months(as.Date(decdf$MB.Date))
+# Use table() to compute reported cases across months
+data <- as.data.frame(table(decdf$Month))
+names(data) <- c("name", "val")
+data
+
+# Loading tidyverse package
+library(tidyverse)
+# Note:
+# - ggplot uses ordering alphabetically
+# - treats Month as factor and default level ordering
+ggplot(data = data, aes(x = name, y = val, fill = name)) +
+    geom_bar(stat = "identity", alpha = .6, width = .4) +
+    coord_flip() +
+    scale_fill_viridis_d() +
+    xlab("") +
+    theme_bw()
+
+
+
+####
+# Same code as before - some correction but failed to get required result
+decdf <- read.csv(
+    file = "https://www.isibang.ac.in/~athreya/Teaching/ISCD/Master.csv",
+    header = TRUE
 )
 decdf$Month <- months(as.Date(decdf$MB.Date))
 data <- as.data.frame(table(decdf$Month))
 names(data) <- c("name", "val")
-data
-library(tidyverse)
-ggplot(data = data, aes(x = name, y = val, fill = name)) +
-    geom_bar(stat = "identity", alpha = .6, width = .4) +
-    coord_flip() +
-    scale_fill_viridis_d() +
-    xlab("") +
-    theme_bw()
-####
-decdf <- read.csv(file = "../Master.csv", header = TRUE)
-decdf$Month <- months(as.Date(decdf$MB.Date))
-data <- as.data.frame(table(decdf$Month))
-names(data) <- c("name", "val")
-library(tidyverse)
+
 data <- arrange(data, val)
+# Note:
+# ggplot() takes into account ordering from the factor given by its levels
+# and NOT as we see in the data-frame
+library(tidyverse)
 ggplot(data = data, aes(x = name, y = val, fill = name)) +
     geom_bar(stat = "identity", alpha = .6, width = .4) +
     scale_fill_viridis_d() +
     coord_flip() +
     xlab("") +
     theme_bw()
+
+
+
 ######
+# Same code as before - some correction to get required result
 library(tidyverse)
 decdf <- read.csv(file = "../Master.csv", header = TRUE)
 decdf$Month <- months(as.Date(decdf$MB.Date))
 data <- as.data.frame(table(decdf$Month))
 names(data) <- c("name", "val")
 data <- arrange(data, val)
+
+# Reorder the levels according to the values
 data$name <- factor(data$name, levels = data$name)
+
+# ggplot() obliges the order now
 ggplot(data = data, aes(x = name, y = val, fill = name)) +
     geom_bar(stat = "identity", alpha = .6, width = .4) +
     coord_flip() +
     scale_fill_viridis_d() +
     xlab("") +
     theme_bw()
+
+
+
 ######
-decdf <- read.csv(file = "../Master.csv", header = TRUE)
+# Order months according to reported deaths
+decdf <- read.csv(
+    file = "https://www.isibang.ac.in/~athreya/Teaching/ISCD/Master.csv",
+    header = TRUE
+)
 decdf$Month <- months(as.Date(decdf$MB.Date))
+
 library(tidyverse)
-ggplot(decdf, aes(x = fct_infreq(Month), fill = cut(Age.In.Years, pretty(Age.In.Years, 4)))) +
+ggplot(
+    data = decdf,
+    aes(
+        x = fct_infreq(Month),
+        fill = cut(Age.In.Years, pretty(Age.In.Years, 4))
+    )
+) +
     geom_bar(stat = "count", alpha = .6, width = .4) +
     scale_fill_viridis_d() +
     xlab("") +
     coord_flip() +
     theme_bw()
-## using dplyr
-ggplot(decdf, aes(x = fct_infreq(Month), fill = cut(Age, pretty(Age, 4)))) +
+
+
+library(dplyr)
+library(forcats)
+# Same plot using dplyr, forcats package and more style
+ggplot(
+    decdf,
+    aes(
+        x = fct_infreq(Month),
+        fill = cut(Age.In.Years, pretty(Age.In.Years, 4))
+    )
+) +
     labs(fill = "Age") +
     geom_bar(stat = "count", width = .4) +
     scale_fill_viridis_d() +
@@ -260,9 +315,7 @@ ggplot(decdf, aes(x = fct_infreq(Month), fill = cut(Age, pretty(Age, 4)))) +
             size = 14,
             face = "bold",
             hjust = 0.5
-        )
-    ) +
-    theme(
+        ),
         axis.title.x = element_text(
             color = "#e95462",
             size = 14, vjust = 0.5, face = "bold"
