@@ -1,5 +1,5 @@
 #############
-"R-code notes compilation for  Week 1 January 20th, 20th
+"R-code notes compilation for  Week 4, February 8th and 10th
 Compiled by: Bikram Halder, B.Math(hons.) 1st year"
 ############# @BikramHalder
 
@@ -33,21 +33,29 @@ as.Date("22JUN01", format = "%d%b%y")
 # We should specify format if input dates are not in standard format
 
 
-####
+#####
 bdays <- c(
-  CRRao = as.Date("1920-09-10"),
-  PCMahalanobis = as.Date("1893-06-29"),
-  Cramer = as.Date("1893-09-25"),
-  KRParthasarathy = as.Date("1936-06-25")
+    CRRao = as.Date("1920-09-10"),
+    PCMahalanobis = as.Date("1893-06-29"),
+    Cramer = as.Date("1893-09-25"),
+    KRParthasarathy = as.Date("1936-06-25")
 )
-# returns weekdays and bdays resp.
+
+# weekdays() and months()
+# - 2 inbuilt functions in R
+# - provide day of the weekand and name of the month respectively
+
+# A vector of weekdays extarcted from the elements bdays
 weekdays(bdays)
+# A vector of months extarcted from the elements bdays
 months(bdays)
 
 
 
 
-###
+##### Computation with dates
+# We must specify format of date
+
 datef1 <- as.Date("02/08/2021", format = "%m/%d/%Y")
 datef1
 
@@ -55,13 +63,14 @@ datef2 <- as.Date("February 8, 2021", format = "%B %d, %Y")
 datef2
 
 
-
 ###
 datef <- as.Date("04/08/2021", format = "%m/%d/%Y")
 datef2 <- as.Date("October 8, 2021", format = "%B %d, %Y")
 
+# Subtraction - specifies difference in days
 datef1 - datef2
-# specifies the diff in days
+
+# Built-in function difftime() - specifies the diff in specified units
 difftime(datef1, datef2, units = "weeks")
 difftime(datef1, datef2, units = "days")
 difftime(datef1, datef2)
@@ -69,10 +78,9 @@ difftime(datef1, datef2)
 datef1
 datef2
 
-# Add-sub days
+# Add and subract days form dates
 datef2 + 10
 datef1 - 10
-
 
 
 
@@ -80,7 +88,7 @@ datef1 - 10
 three.days <- as.Date(c("2020-07-22", "2019-04-20", "2022-10-06"))
 three.days
 
-# diff between dates
+# interval differences between dates
 diff(three.days)
 
 
@@ -100,7 +108,8 @@ Seven
 
 
 
-### It is conjunction with a package - stringr ---- very useful
+### It is conjunction with a package - stringr --- very useful
+# Combine dates & times with string manipulation
 ?strptime
 
 install.packages("stringr")
@@ -112,32 +121,42 @@ install.packages("stringr")
 # - Handles dates and times
 # - also takes care of time zones
 # - accurate representation of time
+
 Time1 <- as.POSIXct("2023-07-24 23:55:26")
 Time1
 
 Time2 <- as.POSIXct("25072023 08:32:07", format = "%d%m%Y %H:%M:%S")
 Time2
 
-
-###
+# Specifying timezone
+Time3 <- as.POSIXct("2020-01-01 11:42:03", tz = "GMT")
 Time3 <- as.POSIXct("2020-01-01 11:42:03", tz = Sys.timezone())
 Time3
 
+# To get timezone of the system
 Sys.timezone()
 
 # Operations with times
 Time2 > Time1
 
+# Time difference
 Time2 - Time1
+
+# adds 30s
 Time1 + 30
+# subtract 30s
 Time1 - 30
 
 
-##
+##### Use as. to do computations
+
+# Adjust for daylight savings time
 as.POSIXct("2021-03-10 08:32:07") - as.POSIXct("2023-03-09 23:55:26")
 Sys.time()
 
+# - Internal integer representstion
 unclass(Time1)
+# - difference from 1970-01-01 00:00:00 UTC
 difftime(Time1, as.POSIXct("1970-01-01 00:00:00", tz = "UTC"), units = "secs")
 
 
@@ -145,11 +164,20 @@ difftime(Time1, as.POSIXct("1970-01-01 00:00:00", tz = "UTC"), units = "secs")
 ## ct - Calender time
 Time1.lt <- as.POSIXlt("2022-07-24 23:55:26")
 Time1.lt
-##
+
+## These 2 functions are used to strip specific units from date & time
+# in column form
 unclass(Time1.lt)
+# in list form
 unlist(Time1.lt)
-##
+
+# getting seconds of Time1.lt
 Time1.lt$sec
+# getting corresponding weekday number of Time1.lt
 Time1.lt$wday
+
+# date & time till the day
 trunc(Time1.lt, "days")
+# date & time till the minuites
 trunc(Time1.lt, "mins")
+

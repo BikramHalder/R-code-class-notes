@@ -1,5 +1,5 @@
 #############
-"R-code notes compilation for  Week 1 January 20th, 20th
+"R-code notes compilation for  Week 5, February 15th and 17th
 Compiled by: Bikram Halder, B.Math(hons.) 1st year"
 ############# @BikramHalder
 
