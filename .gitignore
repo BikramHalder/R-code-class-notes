@@ -1,0 +1,7 @@
+*.pdf
+.R*
+*.tex
+.vscode
+.DS_Store
+*.tar*
+*.zip
