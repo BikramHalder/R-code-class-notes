@@ -181,3 +181,179 @@ trunc(Time1.lt, "days")
 # date & time till the minuites
 trunc(Time1.lt, "mins")
 
+
+
+
+#### The chron R package
+require(chron)
+
+# Creating times in chron
+
+time1.c <- as.chron("2013-07-24 23:55:26")
+# Gives time in chron format
+time1.c
+
+time2.c <- as.chron("07/25/13", "%m/%d/%Y")
+# Gives date in the specified format
+time2.c
+
+# Extracting the date with date()
+dates(time1.c)
+
+# Operaions with time variable
+# logical statement comparing time
+time2.c > time1.c
+
+# Adding 10 days
+time1.c + 10
+
+# Subtraction of time vaiable
+time2.c - time1.c
+
+# Gives difference in the unit specified hours
+difftime(time2.c, time1.c, unit = "hours")
+
+# Gives difference in the time
+as.chron("2013-03-10 08:32:07") - as.chron("2013-03-09 23:55:26")
+
+# NOTE: Chron does not adjust for the time zones
+#####
+
+
+
+#####
+# The https://www.isibang.ac.in/~athreya/Teaching/ISCD/Master.csv file contains Deceased data from Karnataka COVID-19 Bulletin
+decdf <- read.csv(
+    file = "https://www.isibang.ac.in/~athreya/Teaching/ISCD/Master.csv",
+    header = TRUE
+)
+head(decdf)
+names(decdf) <- c(
+    "Sno", "District", "Pid", "Age", "Sex",
+    "Description", "Symptoms", "CMB", "DOA",
+    "DOD", "MB.Date", "Notes"
+)
+
+
+###### Loading the dplyr R package
+library(dplyr)
+
+
+### filter():
+# - Extract rows that meet logical criteria
+# - filters data according to the given condition
+
+# Filters data by age greater than 100
+filter(decdf, Age > 100)
+# Retains only the rows satisfying the given conditions
+filter(decdf, Age > 100 & Sex == "Female")
+
+
+head(decdf$DOA)
+head(decdf$MB.Date)
+
+# Drop the NA rows
+decdf <- filter(decdf, !is.na(DOD))
+# Can't be done with subset()
+
+
+### mutate()
+# - To add new variable without affecting original ones
+decdf <- mutate(
+    decdf,
+    reporting.time = as.Date(decdf$MB.Date) - as.Date(decdf$DOD)
+    # Here we have added new variable "reporting.time" to the dataframe
+    # Original variables are not affected
+)
+
+# Similarly added a new variable "months"
+decdf <- mutate(decdf,
+    Month = months(as.Date(decdf$MB.Date))
+)
+
+
+### distinct()
+# - Removes rows with duplicate values
+
+# Selects distinct rows of Age variable
+DT <- distinct(decdf, Age)
+
+# Other variables can be kept with .keep_all = TRUE argument
+DT <- distinct(decdf, Age, .keep_all = TRUE)
+
+
+
+### slice():  Select rows by position
+SL <- slice(decdf, 10:12)
+head(SL, 2)
+
+
+
+### group_by():
+# - To create a "grouped" copy of a table grouped by columns in ... dplyr functions will manipulate each "group" separately and combine the results.
+
+GS <- group_by(decdf, Sex)
+# groups data by the specified variable.
+head(GS, 3)
+
+# NOTE: Display does NOT show grouping, but it will specify the groups
+
+
+
+### summarise():
+# - Compute table of summaries
+# - Summarises multiple values into a single value
+
+# - Gives the mean of age for each gender.
+summarise(GS, mean(Age, na.rm = TRUE))
+
+
+
+### sample_n():
+# - To select random rows according to the value specified
+
+# Selects 2 random rows from dataframe decdf.
+sample_n(decdf, size = 2)
+
+# Selects 0.0001-fraction of rows at random.
+sample_frac(decdf, size = 0.0001)
+
+
+
+### count():
+# - To count the unique values of one or more variables
+
+# Gives a frequency table for months
+count(decdf, Month)
+
+
+
+### arrange():
+# - Order rows by values of a column or columns (low to high)
+# - use with desc() to order from high to low
+
+orderdf <- arrange(decdf, Age)
+# Creates a new dataframe orderdf having rows arranged by - Age.
+head(orderdf, 2)
+
+# Arranges the data in alphabetical order of the variable - Description
+orderdf2 <- arrange(decdf, Description)
+
+
+
+### The pipe operator - %>%
+# - Used to chain codes
+# - x %>% f(y) becomes f(x, y)
+
+filteredData <- filter(decdf, Month != "September")
+groupedData <- group_by(filteredData, Month)
+summarise(groupedData, mean(Age, na.rm = TRUE))
+
+# The same code written shortly with Pipe - %>%
+decdf %>%
+    filter(Month != 5) %>%
+    group_by(Month) %>%
+    summarise(mean(Age, na.rm = TRUE))
+
+
+#####
