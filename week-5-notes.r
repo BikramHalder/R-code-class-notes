@@ -1,5 +1,5 @@
 #############
-"R-code notes compilation for  Week 5, February 15th and 17th
+"R-code notes compilation for  Week 5, February 15th
 Compiled by: Bikram Halder, B.Math(hons.) 1st year"
 ############# @BikramHalder
 
@@ -32,19 +32,31 @@ Compiled by: Bikram Halder, B.Math(hons.) 1st year"
 # - Store as vector  of integers
 # - Displayed as characters
 
+
+
 # xn - numeric data as factors
 xn <- c(1, 2, 2, 3, 1, 2, 3, 3, 1, 2, 3, 3, 1)
+# Create a vector of data
 factorxn <- factor(xn)
+# Store it as a factor using factor()
 factorxn
 
 
-# Computations with numeric
+# Factors in R are stored as a vector of integers but they correspond to a string for display.
+# Levels:
+# - unique set of values taken by as.character()
+# - assigned by default are those given by as.character(x)
+# factor levels are always characters
+
+
+
+# Both numeric and character data can be stored as factors
 mean(xn)
-
-# argument is not numeric, so will return NA
+# But, factor levels are always characters
 mean(factorxn)
+# Since, argument is not numeric, so will return NA
 
-# use levels function to convert them to original numeric value
+# use levels() function to convert them to original numeric value
 mean(as.numeric(levels(factorxn)[factorxn]))
 
 
@@ -55,15 +67,15 @@ xc <- c(
 )
 factorxc <- factor(xc)
 factorxc
-# Levels : assigned by default all those given by as.character(x)
-# factor levels are always characters
+
 
 
 
 #####
 table(factorxc)
+# table() gives frequency of each level
 
-# ordering is w.r.t. to as.characterc(.) and not related to order in months
+# ordering is w.r.t. to as.characterc(.) and not related to order in the vector
 months <- factor(xc,
     levels = c(
         "Garbage", "January", "February",
@@ -72,21 +84,20 @@ months <- factor(xc,
     ),
     ordered = TRUE
 )
-# - specify levels needed
-# - order can be spscified
+# we can specify the levels with order needed
 months
-
+# Here, levels contain elements not present in months
 months[3] < months[4]
 
 # When factor is created, all it's levels are stored with the factor
 table(months)
-# - Display ALL the levels specified and counts
+# - Display ALL the levels specified and respective counts
 # - occur when subsetting a factor
 
 factor(months)
-# retains only the levels present
-# maintains the ordering
+# retains only the levels present without affecting the ordering
 table(factor(months))
+# Gives the count of ONLY the levels present in the factor
 
 
 
@@ -103,11 +114,10 @@ xfactor <- cut(x, 4)
 xfactor
 
 
-# Exersise:
 cut(x, 3, labels = c("L", "M", "H"))
+# label() - used to specify the levels of the factors
 
-
-# Nicer set of labels
+# Nicer set of labels with pretty()
 xpfactor <- cut(x, pretty(x, 4))
 xpfactor
 # but may not provide more levels than specified
@@ -128,7 +138,7 @@ everyday <- seq(
     by = "day"
 )
 
-# strptime(), strftime() with factors and levels would be very useful for extracting months in order from a scraped dataset
+# strptime(), strftime() with factors and levels would be very useful for extracting information with ordering from a scraped dataset
 
 # format() : can be used to extract month using "%b"
 cmonth <- format(everyday, "%b")
@@ -136,9 +146,10 @@ head(cmonth, 3)
 
 # Extract month from each day
 df <- as.data.frame(table(cmonth))
-names(df) <- c("Month", "Freq")
-# table - tabulates values in each month
+# table()
+# - tabulates values in each month
 # - ordering in alphabetcal
+names(df) <- c("Month", "Freq")
 df
 
 # unique(): returns the unique values in the order that are encountered
@@ -153,7 +164,7 @@ df2
 
 
 
-##
+## vector of all Dates of the year 2021
 everyday <- seq(
     from = as.Date("2021-1-1"), to = as.Date("2021-12-31"),
     by = "day"
@@ -173,29 +184,10 @@ qtrs
 
 
 
-##### Combining factors -
-a.fac <- factor(c("X", "Y", "Z", "X"))
-b.fac <- factor(c("X", "X", "Y", "Y", "Z"))
-a.fac
-b.fac
-c(a.fac, b.fac)
-factor(c(levels(a.fac)[a.fac], levels(b.fac)[b.fac]))
-levels(a.fac)[a.fac]
-factor(c(as.character(a.fac), as.character(b.fac)))
-l1 <- factor(sample(letters, size = 10, replace = TRUE))
-l2 <- factor(sample(letters, size = 10, replace = TRUE))
-l1
-l2
-cl12 <- c(l1, l2)
-cl12
-l12
-###
-
-
 
 
 ###
-# The https://www.isibang.ac.in/~athreya/Teaching/ISCD/Master.csv file contains Deceased data from KA-COVID-19 bulletins
+# The https://www.isibang.ac.in/~athreya/Teaching/ISCD/Master.csv file contains Deceased data from Karnataka COVID-19 Bulletin
 decdf <- read.csv(
     file = "https://www.isibang.ac.in/~athreya/Teaching/ISCD/Master.csv",
     header = TRUE
@@ -234,7 +226,8 @@ names(data) <- c("name", "val")
 data <- arrange(data, val)
 # Note:
 # ggplot() takes into account ordering from the factor given by its levels
-# and NOT as we see in the data-frame
+# & NOT as we see in the data-frame
+# Inspite of arranging our dataframe, the plot is still the same as before
 library(tidyverse)
 ggplot(data = data, aes(x = name, y = val, fill = name)) +
     geom_bar(stat = "identity", alpha = .6, width = .4) +
@@ -268,7 +261,8 @@ ggplot(data = data, aes(x = name, y = val, fill = name)) +
 
 
 ######
-# Order months according to reported deaths
+# With dplyr(R package): Order months according to reported deaths
+# With forcats(R package): fct_infreq
 decdf <- read.csv(
     file = "https://www.isibang.ac.in/~athreya/Teaching/ISCD/Master.csv",
     header = TRUE
@@ -289,7 +283,7 @@ ggplot(
     coord_flip() +
     theme_bw()
 
-
+###
 library(dplyr)
 library(forcats)
 # Same plot using dplyr, forcats package and more style
@@ -297,7 +291,7 @@ ggplot(
     decdf,
     aes(
         x = fct_infreq(Month),
-        fill = cut(Age.In.Years, pretty(Age.In.Years, 4))
+        fill = cut(Age.In.Years, pretty(Age.In.Years, 4)) # cut() is used to add Age.In.Years bin layer
     )
 ) +
     labs(fill = "Age") +
@@ -327,4 +321,3 @@ ggplot(
     )
 
 ## Viridis hexcode https://waldyrious.net/viridis-palette-generator/
-
