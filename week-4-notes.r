@@ -221,6 +221,13 @@ as.chron("2013-03-10 08:32:07") - as.chron("2013-03-09 23:55:26")
 
 
 
+
+
+
+
+
+
+
 #####
 # The https://www.isibang.ac.in/~athreya/Teaching/ISCD/Master.csv file contains Deceased data from Karnataka COVID-19 Bulletin
 decdf <- read.csv(
