@@ -1,7 +1,8 @@
 #############
-"R-code notes compilation for  Week 5, February 15th
-Compiled by: Bikram Halder, B.Math(hons.) 1st year"
-############# @BikramHalder
+"R-code notes compilation for  Week 5 February 15th
+Compiled by: Deepta Basak and Bikram Halder B.Math(hons.) 1st year"
+################
+
 
 # R categorical data
 # Factors and Levels
@@ -24,13 +25,23 @@ Compiled by: Bikram Halder, B.Math(hons.) 1st year"
 # -> Packages - tidyverse- dplyr, tidyr, forcats, readr
 # help in dealing with factors.
 
-
-
-
-
 # factor(x)
 # - Store as vector  of integers
 # - Displayed as characters
+
+####
+xc <- c(
+    "June", "July", "August", "September",
+    "August", "July", "July", "August"
+)
+# create a vector of data
+factorxc <- factor(xc)
+# store the vector as a factor using factor()
+factorxc
+# factors in R are stored as a vector of integers but they correspond to a character string for display
+# Levels are the unique set of values taken by as.character() [this is the default assignment]
+# factor levels are always characters
+###
 
 
 
@@ -40,13 +51,7 @@ xn <- c(1, 2, 2, 3, 1, 2, 3, 3, 1, 2, 3, 3, 1)
 factorxn <- factor(xn)
 # Store it as a factor using factor()
 factorxn
-
-
-# Factors in R are stored as a vector of integers but they correspond to a string for display.
-# Levels:
-# - unique set of values taken by as.character()
-# - assigned by default are those given by as.character(x)
-# factor levels are always characters
+# Note: factor levels are always characters
 
 
 
@@ -75,7 +80,7 @@ factorxc
 table(factorxc)
 # table() gives frequency of each level
 
-# ordering is w.r.t. to as.characterc(.) and not related to order in the vector
+# ordering is w.r.t. to as.character(.)  and not related to the order in the vector.
 months <- factor(xc,
     levels = c(
         "Garbage", "January", "February",
@@ -84,18 +89,18 @@ months <- factor(xc,
     ),
     ordered = TRUE
 )
-# we can specify the levels with order needed
+# we can specify the levels and the order that we want
 months
-# Here, levels contain elements not present in months
+# Here, in our specification, levels contain elements not present in months
 months[3] < months[4]
 
 # When factor is created, all it's levels are stored with the factor
 table(months)
-# - Display ALL the levels specified and respective counts
+# - table() will display  ALL the levels specified and respective counts
 # - occur when subsetting a factor
 
 factor(months)
-# retains only the levels present without affecting the ordering
+# retains only the levels present without affecting the ordering (i.e and maintains their order.)
 table(factor(months))
 # Gives the count of ONLY the levels present in the factor
 
@@ -112,6 +117,9 @@ xfactor <- cut(x, 4)
 # - arbitary by default
 # - specifies how range of numbers will be converted to factor values
 xfactor
+table(xfactor)
+# displays the count of each level that was created using cut()
+
 
 
 cut(x, 3, labels = c("L", "M", "H"))
@@ -120,42 +128,48 @@ cut(x, 3, labels = c("L", "M", "H"))
 # Nicer set of labels with pretty()
 xpfactor <- cut(x, pretty(x, 4))
 xpfactor
-# but may not provide more levels than specified
+# but may or may not provide more levels than specified
 table(xpfactor)
+# displays the count of each level created with pretty()
 
-# Produce factors based on percentiles of your data
+
 xqfactor <- cut(x, quantile(x, probs = seq(0, 1, 0.25)))
+# Produce factors based on percentiles of your data
+
 table(xqfactor)
-# obsevations are distributed "equally" in each level
+# observations are distributed "equally" in each level
 
 
 
 
-##### Create factors from dates/times
+
 everyday <- seq(
     from = as.Date("2021-1-1"),
     to = as.Date("2021-12-31"),
     by = "day"
 )
+##### Create factors from dates/times
+# strptime(), strftime() with factors and levels would be very useful for extracting information with ordering from a scraped dataset.
 
-# strptime(), strftime() with factors and levels would be very useful for extracting information with ordering from a scraped dataset
-
-# format() : can be used to extract month using "%b"
 cmonth <- format(everyday, "%b")
+# format() can be used to extract the month from each date using '%b'
+# Extract month from each day
 head(cmonth, 3)
 
-# Extract month from each day
 df <- as.data.frame(table(cmonth))
 # table()
 # - tabulates values in each month
 # - ordering in alphabetcal
+# as.data.frame() stores the output as dataframe
 names(df) <- c("Month", "Freq")
+# changing the names of the variables of the dataframe d
 df
 
-# unique(): returns the unique values in the order that are encountered
+
 months <- factor(cmonth,
     levels = unique(cmonth), ordered = TRUE
 )
+# unique(): returns the unique values in the order that are encountered
 # stored months as factors
 df2 <- as.data.frame(table(months))
 names(df2) <- c("Month", "Freq")
@@ -164,11 +178,11 @@ df2
 
 
 
-## vector of all Dates of the year 2021
 everyday <- seq(
     from = as.Date("2021-1-1"), to = as.Date("2021-12-31"),
     by = "day"
 )
+## vector of all Dates of the year 2021
 
 wks <- cut(everyday, breaks = "week")
 # levels - 53 dates of each week of the year 2021
@@ -185,36 +199,39 @@ qtrs
 
 
 
-
 ###
-# The https://www.isibang.ac.in/~athreya/Teaching/ISCD/Master.csv file contains Deceased data from Karnataka COVID-19 Bulletin
 decdf <- read.csv(
     file = "https://www.isibang.ac.in/~athreya/Teaching/ISCD/Master.csv",
     header = TRUE
 )
-# Use months() to extract months of reporting date
+# This is the deceased data from the Government of Karnataka COVID-19 Bulletin.
+# The https://www.isibang.ac.in/~athreya/Teaching/ISCD/Master.csv file contains this collation.
+
 decdf$Month <- months(as.Date(decdf$MB.Date))
-# Use table() to compute reported cases across months
+# Use months() to extract months of reporting date
 data <- as.data.frame(table(decdf$Month))
 names(data) <- c("name", "val")
+# Use table() to compute reported cases across months
+# change names of dataframe
 data
 
-# Loading tidyverse package
+
 library(tidyverse)
-# Note:
-# - ggplot uses ordering alphabetically
-# - treats Month as factor and default level ordering
+# Loading tidyverse package
 ggplot(data = data, aes(x = name, y = val, fill = name)) +
     geom_bar(stat = "identity", alpha = .6, width = .4) +
     coord_flip() +
     scale_fill_viridis_d() +
     xlab("") +
     theme_bw()
+# Note:
+# - ggplot uses ordering alphabetically
+# - treats Month as factor and default level ordering
 
 
 
 ####
-# Same code as before - some correction but failed to get required result
+## try to plot below in order of frequency values.
 decdf <- read.csv(
     file = "https://www.isibang.ac.in/~athreya/Teaching/ISCD/Master.csv",
     header = TRUE
@@ -222,12 +239,10 @@ decdf <- read.csv(
 decdf$Month <- months(as.Date(decdf$MB.Date))
 data <- as.data.frame(table(decdf$Month))
 names(data) <- c("name", "val")
-
+# create data frame
 data <- arrange(data, val)
-# Note:
-# ggplot() takes into account ordering from the factor given by its levels
-# & NOT as we see in the data-frame
-# Inspite of arranging our dataframe, the plot is still the same as before
+# Note: We arranged our dataframe to preferred ordering.
+
 library(tidyverse)
 ggplot(data = data, aes(x = name, y = val, fill = name)) +
     geom_bar(stat = "identity", alpha = .6, width = .4) +
@@ -235,11 +250,15 @@ ggplot(data = data, aes(x = name, y = val, fill = name)) +
     coord_flip() +
     xlab("") +
     theme_bw()
-
+# ggplot() takes into account ordering from the factor given by its levels
+# & NOT as we see in the data-frame
+# Inspite of arranging our dataframe, the plot is still the same as before!
 
 
 ######
 # Same code as before - some correction to get required result
+## try to plot below in order of frequency values.
+
 library(tidyverse)
 decdf <- read.csv(file = "../Master.csv", header = TRUE)
 decdf$Month <- months(as.Date(decdf$MB.Date))
@@ -247,27 +266,26 @@ data <- as.data.frame(table(decdf$Month))
 names(data) <- c("name", "val")
 data <- arrange(data, val)
 
-# Reorder the levels according to the values
 data$name <- factor(data$name, levels = data$name)
+# Reorder the levels according to the values
 
-# ggplot() obliges the order now
 ggplot(data = data, aes(x = name, y = val, fill = name)) +
     geom_bar(stat = "identity", alpha = .6, width = .4) +
     coord_flip() +
     scale_fill_viridis_d() +
     xlab("") +
     theme_bw()
-
+# ggplot() obliges the order now
 
 
 ######
-# With dplyr(R package): Order months according to reported deaths
-# With forcats(R package): fct_infreq
+# using dplyr and forcats
 decdf <- read.csv(
     file = "https://www.isibang.ac.in/~athreya/Teaching/ISCD/Master.csv",
     header = TRUE
 )
 decdf$Month <- months(as.Date(decdf$MB.Date))
+# create data frame
 
 library(tidyverse)
 ggplot(
@@ -283,10 +301,12 @@ ggplot(
     coord_flip() +
     theme_bw()
 
+# With dplyr(R package): Order months according to reported deaths
+# With forcats(R package): fct_infreq
+
 ###
 library(dplyr)
 library(forcats)
-# Same plot using dplyr, forcats package and more style
 ggplot(
     decdf,
     aes(
@@ -319,5 +339,9 @@ ggplot(
             size = 14, face = "bold"
         )
     )
-
-## Viridis hexcode https://waldyrious.net/viridis-palette-generator/
+# forcats used to create ordered factors.
+# fill command used to add age as layer.
+# labeling of axis, title and ticks discussed above.
+# check other themes in ggplot
+# cut() from base R was used to add Age bin layer
+## Viridis hexcodes from https://waldyrious.net/viridis-palette-generator/
