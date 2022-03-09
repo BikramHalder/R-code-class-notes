@@ -1,7 +1,7 @@
 #############
 "R-code notes compilation for  Week 4, February 8th and 10th
-Compiled by: Bikram Halder, B.Math(hons.) 1st year"
-############# @BikramHalder
+Compiled by: Devansh Kamra, B.Math(hons.) 1st year"
+#############
 
 
 # R - Date and time
