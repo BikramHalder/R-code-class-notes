@@ -1,0 +1,30 @@
+### R-code notes compilation for  Week 6, February 22th and 25th
+
+##### Compiled by: Prognadipto Majumder, B.Math(hons.) 1st year
+
+
+```{r}
+runningmean <- function(x, N) {
+  y <- sample(x, N, replace = TRUE)
+  # THIS samples N points wih replacement
+  c <- cumsum(y)
+  # cumulative sums of the 1st i values in i th position
+  n <- 1:N
+  c / n
+  # Division is vectorised, mean of 1st i values of y is in ith position
+}
+```
+
+Simulating $1000$ trials of $Ber(\frac{1}{2})$
+
+The $1000$ $Ber(\frac{1}{2})$ variables being $X_1,X_2, \ldots ,X_{1000}$,
+
+```{r}
+u <- runningmean(c(0, 1), 1000)
+```
+
+The function returns the mean of the first $i$ random variables in the $i^{th}$ place.
+, i.e., ```u[i]``` = $\frac{X_1+X_2+...+X_i}{i}$
+
+We "guess" the value of ```u[i]``` will converge to $\frac{1}{2}$ as
+```i``` gets really large. (It should converge with probability $1$)

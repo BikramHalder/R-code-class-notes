@@ -1,5 +1,5 @@
 #############
-"R-code notes compilation for  Week 4, February 8th and 10th
+"R-code notes compilation for  Week 6, February 22th and 25th
 Compiled by: Prognadipto Majumder, B.Math(hons.) 1st year"
 #############
 
