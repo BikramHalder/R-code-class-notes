@@ -9,7 +9,7 @@ Compiled by: Deepta Basak. B.Math(hons.) 1st year"
 9 / 44
 0.6 * 0.4 + 0.3 * 0.6
 log(0.6 * 0.4 + 0.3 * 0.6)
-# Above are basic operations in 
+# Above are basic operations in
 # / division, * multiplcation, + addition, - subtraction
 
 # Note:
@@ -87,11 +87,13 @@ airquality[148, ]
 # provides the enitre 148th row
 airquality[, c(1, 4)]
 # provides the 'Ozone' and 'Temp' columns
-# using c() function, we can form any vector and that will enable display of the respective columns
+# using c() function,
+# we can form any vector and that will enable display of the respective columns
 # we didn't specify the rows, so, all the rows will be displayed
 
 summary(airquality$Temp)
-# provides six number summary: Min, 1st quartile, Median, Mean, 3rd quartile., Max
+# provides six number summary:
+# Min, 1st quartile, Median, Mean, 3rd quartile., Max
 
 
 
