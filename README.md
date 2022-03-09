@@ -4,5 +4,5 @@ R code class notes of [Statistics 1 course](https://www.isibang.ac.in/~athreya/T
 
 - Deepta Basak
 - Devansh Kamra
-- Prorgnadipto Majumder
+- Prognadipto Majumder
 - Bikram Halder
