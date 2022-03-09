@@ -1,6 +1,23 @@
+---
+output:
+  pdf_document: default
+  theme: null
+  bg: '#121212'
+  fg: '#E4E4E4'
+  base_font: null
+  google: Prompt
+  html_document: null
+---
+
 ### R-code notes compilation for  Week 6, February 22th and 25th
 
 ##### Compiled by: Prognadipto Majumder, B.Math(hons.) 1st year
+
+```{r include=FALSE}
+knitr::opts_chunk$set(message = FALSE)
+library(ggplot2)
+```
+
 
 
 ```{r}
@@ -15,6 +32,8 @@ runningmean <- function(x, N) {
 }
 ```
 
+$$\\[0.5in]$$
+
 Simulating $1000$ trials of $Ber(\frac{1}{2})$
 
 The $1000$ $Ber(\frac{1}{2})$ variables being $X_1,X_2, \ldots ,X_{1000}$,
@@ -28,3 +47,25 @@ The function returns the mean of the first $i$ random variables in the $i^{th}$ 
 
 We "guess" the value of ```u[i]``` will converge to $\frac{1}{2}$ as
 ```i``` gets really large. (It should converge with probability $1$)
+
+$$\\[0.5in]$$
+
+Plotting line graph in ```ggplot```
+
+
+```{r}
+x <- 1:1000
+data <- data.frame(u,x)
+
+ggplot(data) +
+  geom_line(aes(x = x, y = u))
+```
+
+Printing 10 line graphs in the same plot by replicate command that makes 10 function calls. For each call, we RANDOMLY assign a colour to graph.
+
+```{r}
+df <- data.frame(replicate(10,runningmean(c(0, 1), 1000), x))
+
+ggplot(df, mapping = aes(colour = rgb(runif(3), runif(3), runif(3)))) +
+  geom_line()
+```
