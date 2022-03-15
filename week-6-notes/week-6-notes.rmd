@@ -2,14 +2,14 @@
 output:
   pdf_document: default
   theme: null
-  bg: '#121212'
-  fg: '#E4E4E4'
+  bg: "#121212"
+  fg: "#E4E4E4"
   base_font: null
   google: Prompt
   html_document: null
 ---
 
-### R-code notes compilation for  Week 6, February 22th and 25th
+### R-code notes compilation for Week 6, February 22th and 25th
 
 ##### Compiled by: Prognadipto Majumder, B.Math(hons.) 1st year
 
@@ -17,8 +17,6 @@ output:
 knitr::opts_chunk$set(message = FALSE)
 library(ggplot2)
 ```
-
-
 
 ```{r}
 runningmean <- function(x, N) {
@@ -43,15 +41,13 @@ u <- runningmean(c(0, 1), 1000)
 ```
 
 The function returns the mean of the first $i$ random variables in the $i^{th}$ place.
-, i.e., ```u[i]``` = $\frac{X_1+X_2+...+X_i}{i}$
+, i.e., `u[i]` = $\frac{X_1+X_2+...+X_i}{i}$
 
-We "guess" the value of ```u[i]``` will converge to $\frac{1}{2}$ as
-```i``` gets really large. (It should converge with probability $1$)
+We "guess" the value of `u[i]` will converge to $\frac{1}{2}$ as `i` gets really large. (It should converge with probability $1$)
 
 $$\\[0.5in]$$
 
-Plotting line graph in ```ggplot```
-
+Plotting line graph in `ggplot`
 
 ```{r}
 x <- 1:1000
