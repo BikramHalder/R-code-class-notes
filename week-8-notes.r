@@ -1,10 +1,10 @@
 #############
 "R-code notes compilation for  Week 8 March 15th, 17th
-Compiled by: Deepta Basak. B.Math(hons.) 1st year"
+Compiled by: Deepta Basak, B.Math(hons.) 1st year"
 #############
 
 
-# Simulating Central Limit 
+### Simulating Central Limit
 
 # loading tidyverse for ggplot
 library(tidyverse)
@@ -181,7 +181,7 @@ points(0, w[2], pch = 24, col = "brown")
 
 
 # Checking confidence intervals with differnent number of trials
-###
+### 10 trials
 normaldata <- replicate(10,
   rnorm(100, 0, 1),
   simplify = FALSE
@@ -210,7 +210,7 @@ ggplot(df, aes(x = x, y = 0)) +
 
 
 
-###
+### 40 trials
 normaldata <- replicate(40,
   rnorm(100, 0, 1),
   simplify = FALSE
@@ -240,7 +240,7 @@ ggplot(df, aes(x = x, y = 0)) +
 
 
 
-###
+### 100 trials
 normaldata <- replicate(100,
   rnorm(100, 0, 1),
   simplify = FALSE
