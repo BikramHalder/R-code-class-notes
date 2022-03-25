@@ -24,7 +24,7 @@ Compiled by: Bikram Halder, B.Math(hons.) 1st year"
 ### Let's analyze the dataset of Maternal smoking vs Infant Health
 # Dataset - https://www.stat.berkeley.edu/~statlabs/labs.html#babiesI
 # Contains - 1236 infant data
-# Varaiables - bwt (birth weight in ounces) & smoke
+# Varaiables - bwt (birth weight in ounces) & smoke (smoking status of mother)
 # (From Stat Labs website )
 
 
@@ -160,4 +160,193 @@ df %>%
 
 
 
-#
+## loading UsingR for fat dataset
+library(UsingR)
+
+?fat
+# Info about fat dataset
+
+names(fat)
+# Variables
+
+
+# Let's analyze the relation between neck and wrist
+
+# Comparing averages in 2 ways
+z <- mean(fat$neck) / mean(fat$wrist)
+z
+
+y <- mean(fat$neck / fat$wrist)
+y
+
+
+
+plt1 <- fat %>%
+  ggplot(
+    aes(x = wrist, y = neck)
+  ) +
+  geom_point() +
+  geom_smooth(method = "lm")
+
+plt1
+# plotting neck vs wrist in ggplot
+# method = 'lm' yields a linear regression layer
+## Relationship seems linear
+
+
+
+plt2 <- fat %>%
+  filter(20 <= age & age < 30) %>%
+  ggplot(
+    aes(x = wrist, y = neck)
+  ) +
+  geom_point() +
+  geom_smooth(method = "lm")
+
+
+# loading library cowplot
+# for the function plot_grid() - used to present multiple plot in a frame
+library(cowplot)
+
+plot_grid(plt1, plt2, ncol = 2)
+# The variables seem related and also by a linear relationship.
+
+
+
+
+# Let's understand Covariance and Correlation with data
+
+fat %>%
+  ggplot(
+    aes(
+      x = wrist, y = neck,
+      col = rgb(.35, 0, 0)
+    )
+  ) +
+  theme(legend.position = "none") +
+  geom_point() +
+  geom_vline(xintercept = mean(fat$wrist)) +
+  geom_hline(yintercept = mean(fat$neck))
+
+# Observe: most of the datapoints are in 1st and 3rd quadrant
+
+
+# Let's slice and plot it again
+fat %>%
+  slice(100:175) %>%
+  ggplot(
+    aes(
+      x = wrist, y = neck,
+      col = rgb(.35, 0, 0)
+    )
+  ) +
+  theme(legend.position = "none") +
+  geom_point() +
+  geom_vline(xintercept = mean(fat$wrist[100:175])) +
+  geom_hline(yintercept = mean(fat$neck[100:175]))
+
+# Here also most of the datapoints lie 1st and 3rd quadrant
+
+
+
+# Plotting relationship between age and ankle with sliced data
+fat %>%
+  slice(100:175) %>%
+  ggplot(
+    aes(
+      x = ankle, y = age,
+      col = rgb(.35, 0, 0)
+    )
+  ) +
+  theme(legend.position = "none") +
+  geom_point() +
+  geom_vline(xintercept = mean(fat$ankle[100:175])) +
+  geom_hline(yintercept = mean(fat$age[100:175]))
+
+# Nope! most of the datapoints are not in 1st and 3rd quadrants
+# Thus, no linear relationship
+
+
+
+
+
+
+### Covariance
+# - measurement of the difference between the two variables in the four regions.
+
+### Correlation
+# - Covariance in standardised scale
+
+
+
+cor(fat$wrist, fat$neck)
+# Correlation between wrist and neck variabele in fat dataset
+
+cor(fat$wrist, fat$height)
+# Correlation between wrist and height variabele in fat dataset
+
+cor(fat$age, fat$ankle)
+# Correlation between age and ankle variabele in fat dataset
+
+
+
+# loading MASS to load the dataset Animals
+library(MASS)
+
+# Is it true that animals with larger bodies have larger brains?
+
+# Method 1: plot brain vs body variable
+Animals %>%
+  ggplot(
+    aes(x = brain, y = body)
+  ) +
+  geom_point()
+
+
+
+# Method 2: Computing Correlation between brain and body
+cor(Animals$body, Animals$brain)
+
+
+
+# Method 3:
+# - Assign rank and transform the dataset
+# - Compute correlation
+
+cor(rank(Animals$body), rank(Animals$brain))
+
+cor(Animals$body, Animals$brain, method = "spearman")
+
+# AKA spearman correlation coefficient
+# i.e., measurement of relationship of monotonic data
+
+
+
+
+
+
+
+
+
+
+# Simple linear regrassion model of wrist vs neck (fat dataset)
+fat %>%
+  ggplot(
+    aes(
+      x = wrist, y = neck,
+      col = rgb(0, 0, 0.6)
+    )
+  ) +
+  theme(legend.position = "none") +
+  geom_point() +
+  geom_smooth(
+    method = "lm",
+    aes(col = rgb(0.4, 0, 0)),
+    se = FALSE
+  ) +
+  geom_vline(xintercept = mean(fat$wrist)) +
+  geom_hline(yintercept = mean(fat$neck))
+
+
+
+###
